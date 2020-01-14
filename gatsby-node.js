@@ -1,6 +1,8 @@
 const path = require(`path`)
 const { createFilePath } = require(`gatsby-source-filesystem`)
 
+let markdownNodes = []
+
 exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions
 
@@ -54,6 +56,10 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
   const { createNodeField } = actions
 
   if (node.internal.type === `MarkdownRemark`) {
+
+    console.log("Adding markdownNode: ", node);
+    markdownNodes.push(node);
+
     const value = createFilePath({ node, getNode })
     createNodeField({
       name: `slug`,
@@ -64,8 +70,11 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
 }
 
 exports.sourceNodes = ({getNodes, actions}) => {
-  let markdownNodes =  getNodes().filter((node) => node.absolutePath && node.absolutePath.endsWith(".md"));
-  console.log(markdownNodes);
+
+  sleep(2000);
+
+  //let markdownNodes =  getNodes().filter((node) => node.absolutePath && node.absolutePath.endsWith(".md"));
+  console.log("sourceNodes - markdownNodes: ", markdownNodes);
 
   markdownNodes.forEach(n => {
     actions.createNodeField({
@@ -74,4 +83,8 @@ exports.sourceNodes = ({getNodes, actions}) => {
        value: 'This is git info'
     })
   })
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
