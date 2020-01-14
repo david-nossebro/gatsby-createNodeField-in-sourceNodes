@@ -62,3 +62,16 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
     })
   }
 }
+
+exports.sourceNodes = ({getNodes, actions}) => {
+  let markdownNodes =  getNodes().filter((node) => node.absolutePath && node.absolutePath.endsWith(".md"));
+  console.log(markdownNodes);
+
+  markdownNodes.forEach(n => {
+    actions.createNodeField({
+       n,
+       name: 'git',
+       value: 'This is git info'
+    })
+  })
+}
